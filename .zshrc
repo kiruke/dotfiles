@@ -30,6 +30,9 @@ alias history='history -t "%F %T"'
 # Homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
+# Go-installed command-line tools (e.g. diff-tour)
+export PATH="$HOME/go/bin:$PATH"
+
 # rbenv
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
