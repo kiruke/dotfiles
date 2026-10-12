@@ -308,6 +308,56 @@ code docs/setup-dotfiles.md
 
 今回の構築手順を `setup-dotfiles.md` に記録する。
 
+## diff-tourとCodex CLIの導入
+
+Gitの差分を説明付きのツアーとして読むため、Go製の`diff-tour`と、対応LLMのCodex CLIを導入する。`Brewfile`にはCodex CLIのnpmパッケージを記録し、`tour`本体は公式READMEにあるGo install手順で導入する。
+
+```bash
+go install github.com/init-co-jp/diff-tour/cmd/tour@latest
+npm install --global @openai/codex
+```
+
+`tour`は既定で`$(go env GOPATH)/bin`（通常は`~/go/bin`）にインストールされる。このリポジトリの`.zshrc`では`~/go/bin`をPATHに追加している。bashを使う場合は、`~/.bash_profile`にも次の設定を追加する。
+
+```bash
+export PATH="$HOME/go/bin:$PATH"
+```
+
+設定を反映するため、新しいVS Codeターミナルを開くか、zshの場合は設定を読み直す。
+
+```bash
+source ~/.zshrc
+tour --version
+codex --version
+codex login status
+```
+
+Codex CLIが未ログインなら`codex login`で認証する。初回設定を行い、表示言語に日本語、LLMにCodex CLIを選ぶ。
+
+```bash
+tour setup
+```
+
+### 利用方法
+
+対象リポジトリに移動し、ツアーにしたいブランチまたは差分範囲を指定する。ブランチを指定すると既定ブランチとの差分が対象になる。
+
+```bash
+cd ~/path/to/repository
+tour feature/branch-name
+tour origin/main..feature/branch-name
+```
+
+別のリポジトリを指定して実行することもできる。たとえば`yomiato`の既存ブランチを確認する場合:
+
+```bash
+tour feature/user-authentication --repo ~/rails_study/runteq/yomiato --lang ja --dump --plain
+```
+
+`--dump --plain`はツアーを端末へ出力する検証用オプション。通常利用では`--dump --plain`を外し、TUIで左右キーを使って手順を読み進める。`tour --help`で引数を確認できる。
+
+ツアー生成では、比較対象のリポジトリファイル、差分、コミットメッセージが選択したLLM提供元へ送られる。機密情報を含む可能性がある場合は、ツアー生成前に対象ファイルを確認する。diff-tour自体は読み取り専用で動作する。
+
 ## 現在の構成
 
 最終的なリポジトリ構成は以下。

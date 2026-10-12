@@ -33,3 +33,23 @@ exec "$HOME/.rbenv/shims/ruby" "$HOME/dotfiles/alfred/youtube/subtitles.rb" "$1"
 - 取得できなかった動画がある場合は、動画タイトル・URL・理由を記録した`youtube-subtitles-日付時刻-failures.txt`も`~/Downloads`へ保存します。
 - 処理結果はmacOSの通知にも表示されます。すべての動画で字幕が取得できなかった場合はZIPを作成せず、失敗一覧を保存します。
 - 字幕とZIPはリポジトリ外に作成するため、Gitの管理対象にはなりません。
+
+## diff-tour（Git差分の学習ツアー）
+
+Gitの変更をLLMに説明させ、コード・差分・設計判断を順に学べるCLIです。Codex CLIを利用するには、Codexにログインしたうえで初回にLLMとしてCodex CLIを選択します。
+
+```sh
+go install github.com/init-co-jp/diff-tour/cmd/tour@latest
+npm install --global @openai/codex
+codex login
+tour setup
+```
+
+Goでインストールした`tour`は通常`~/go/bin`に置かれます。このリポジトリの`.zshrc`はそこをPATHに追加します。bashを使う場合は、`export PATH="$HOME/go/bin:$PATH"`を`~/.bash_profile`にも追加し、新しいターミナルを開いてください。
+
+```sh
+tour feature/branch-name
+tour origin/main..feature/branch-name
+```
+
+`tour setup`で表示言語とCodex CLIを選択します。差分のツアー生成ではリポジトリのコードやコミット情報がCodexに渡されます。未コミットの変更も対象にする場合は、実行前に内容を確認してください。
